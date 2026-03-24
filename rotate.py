@@ -1,8 +1,22 @@
 import sys
-inp = ' '.join(sys.argv[1:])
-if not inp:
-  print("Translates an input phrase into a secret language. Gives up to 23 translations to choose from.")
-  print('Usage: python rotate.py "Some input phrase."')
+def help():
+  print("Translates an input phrase into a secret language. Gives up to N translations to choose from.")
+  print("Usage: python rotate.py <text to translate> [number of translations to give]")
+  print("number of translations to give defaults to 23.")
+  exit()
+if len(sys.argv)==1:
+  help()
+else:
+  inp = sys.argv[1]
+  if len(sys.argv)==3:
+    try:
+      n = int(sys.argv[2])
+    except:
+      help()
+  elif len(sys.argv)>3:
+    help()
+  elif len(sys.argv)==2:
+    n = 23    
 specials = []
 inplen = 0
 nonspecials = []
@@ -12,7 +26,9 @@ for i, x in enumerate(inp):
   else:
     specials += [(i, x)]
 lennon = len(nonspecials)
-for o in range(-min(11, lennon//2), min(11, lennon//2)+lennon%2):
+mn = -min(n//2, lennon//2)
+mx = min(-mn+n%2, lennon)
+for o in range(mn, mx):
   output = list(x for x in nonspecials[-o:]+nonspecials[:-o] if x.isalnum())
   for i, x in specials:
     output.insert(i, x)
